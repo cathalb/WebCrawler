@@ -5,25 +5,27 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Linq;
 
 namespace WebCrawler.Engine
 {
     public class WebCrawler
     {
-        public bool GetUrlDetails(string myUri)
+        public IEnumerable<string> GetUrlLinks(string myUri)
         {
             var webRequest = WebRequest.Create(myUri);
             var webResponse = webRequest.GetResponse();
 
             var streamResponse = webResponse.GetResponseStream();
-            if (streamResponse == null) return false;
+            if (streamResponse == null) return null;
             var streamReader = new StreamReader(streamResponse);
             var stream = streamReader.ReadToEnd();
             var item = GetContent(stream);
-            return false;
+            return item.Select(x => x.Href).ToList();
         }
 
-        private string GetContent(string pageString)
+        private IEnumerable<LinkItem> GetContent(string pageString)
         {
             var list = new List<LinkItem>();
             var matchCollection = Regex.Matches(pageString, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
@@ -45,7 +47,7 @@ namespace WebCrawler.Engine
 
                 list.Add(i);
             }
-            return string.Empty;
+            return list;
         }
 
         public class LinkItem

@@ -16,7 +16,7 @@ namespace WebCrawler.Test
         public void GetTheUrlInformationTest()
         {
             var webCrawler = new Engine.WebCrawler();
-            var urlDetails = webCrawler.GetUrlDetails("http://www.rte.ie");
+            var urlDetails = webCrawler.GetUrlLinks("http://www.rte.ie");
             Assert.IsNotNull(urlDetails);
         }
     }
